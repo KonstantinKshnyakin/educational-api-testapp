@@ -1,12 +1,14 @@
 package ru.kshnykin.kg.qa.education.api.testapp.api.dto;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class Order {
 
-    private Integer id;
-    private Integer petId;
+    private Long id;
+    private Long petId;
     private Integer quantity;
     private String shipDate;
     private OrderStatus status;

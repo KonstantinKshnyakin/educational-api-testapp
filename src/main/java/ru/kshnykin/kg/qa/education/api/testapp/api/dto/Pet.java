@@ -10,7 +10,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class Pet {
 
-    private Integer id;
+    private Long id;
     private Category category;
     private String name;
     private List<String> photoUrls;

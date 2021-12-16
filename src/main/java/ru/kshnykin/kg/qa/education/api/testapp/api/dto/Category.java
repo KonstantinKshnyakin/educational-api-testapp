@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Category {
 
-    private Integer id;
+    private Long id;
     private String name;
 
 }

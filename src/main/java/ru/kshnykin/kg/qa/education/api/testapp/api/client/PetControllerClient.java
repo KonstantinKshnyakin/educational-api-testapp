@@ -1,49 +1,52 @@
 package ru.kshnykin.kg.qa.education.api.testapp.api.client;
 
 import io.restassured.RestAssured;
-import io.restassured.response.ValidatableResponse;
+import io.restassured.internal.ValidatableResponseImpl;
 import io.restassured.specification.RequestSpecification;
+import ru.kshnykin.kg.qa.education.api.testapp.api.ClientBase;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
 
 public class PetControllerClient {
 
-    public static final String DEFAULT_PATH = "/pet";
+    public static final String DEF_PATH = "/pet";
 
-    public static Post_pet getPost_pet() {
-        return new Post_pet();
+    public static AddPet getAddPetEndpoint() {
+        return new AddPet();
     }
     /**
      * Uploads an image
+     * host/v2/pet/uploadImage
      */
-    public static class Post_pet_petId_UploadImage {
+    public static class UploadImage extends ClientBase {
 
     }
 
     /**
      * Add a new pet to the store
+     * host/v2/pet
      */
-    public static class Post_pet {
+    public static class AddPet extends ClientBase {
 
-        public ValidatableResponse getDefaultRequestWith(RequestSpecification specification) {
-            return RestAssured.given()
+        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification specification) {
+            return (ValidatableResponseImpl) RestAssured.given()
                     .log().all()
                     .contentType(ContentType.APP_JSON)
                     .accept(ContentType.APP_JSON)
                     .spec(specification)
                     .when()
-                    .post(DEFAULT_PATH)
+                    .post(DEF_PATH)
                     .then()
                     .log().all();
         }
 
-        public ValidatableResponse getDefaultRequestWith(Object requestBody) {
-            return RestAssured.given()
+        public ValidatableResponseImpl getDefaultRequestWith(Object requestBody) {
+            return (ValidatableResponseImpl) RestAssured.given()
                     .log().all()
                     .contentType(ContentType.APP_JSON)
                     .accept(ContentType.APP_JSON)
                     .body(requestBody)
                     .when()
-                    .post(DEFAULT_PATH)
+                    .post(DEF_PATH)
                     .then()
                     .log().all();
         }
@@ -52,36 +55,41 @@ public class PetControllerClient {
 
     /**
      * Update an existing pet
+     * host/v2/pet
      */
-    public static class Put_pet {
+    public static class UpdatePet extends ClientBase {
 
     }
 
     /**
      * Finds Pets by status
+     * host/v2/pet/findByStatus
      */
-    public static class Get_pet_findByStatus {
+    public static class FindPetsByStatus extends ClientBase {
 
     }
 
     /**
      * Find pet by ID
+     * host/v2/pet/{petId}
      */
-    public static class Get_pet_petId {
+    public static class GetPetById extends ClientBase {
 
     }
 
     /**
      * Updates a pet in the store with form data
+     * host/v2/pet/{petId}
      */
-    public static class Put_pet_petId {
+    public static class UpdatePetWithForm extends ClientBase {
 
     }
 
     /**
      * Deletes a pet
+     * host/v2/pet/{petId}
      */
-    public static class Delete_pet_petId {
+    public static class DeletePet extends ClientBase {
 
     }
 }
