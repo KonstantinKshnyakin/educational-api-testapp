@@ -1,10 +1,13 @@
-package ru.kshnykin.kg.qa.education.api.testapp.test.pet;
+package ru.kshnykin.kg.qa.education.api.testapp.tests.pet;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.ValidatableResponseImpl;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.opentest4j.TestSkippedException;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
 import ru.kshnykin.kg.qa.education.api.testapp.api.client.PetControllerClient;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
@@ -61,6 +64,27 @@ public class AddPetTests {
         asserSuccessResponse(response, reqBody);
     }
 
+    @Test
+    @DisplayName("все поля заполнены и если поле status = true -> ERROR")
+    @Disabled
+    public void test1640108967891() {
+        throw new TestSkippedException("Unimplemented test");
+    }
+
+    @Test
+    @DisplayName("все поля заполнены и если поле status = радомное целое число -> ERROR")
+    @Disabled
+    public void test1640108967892() {
+        throw new TestSkippedException("Unimplemented test");
+    }
+
+    @Test
+    @DisplayName("все поля заполнены и если поле status = рандомное вещественно число -> ERROR")
+    @Disabled
+    public void test1640108967893() {
+        throw new TestSkippedException("Unimplemented test");
+    }
+
     private ValidatableResponseImpl asserSuccessResponse(ValidatableResponseImpl response, Pet reqBody) {
         response.assertThat()
                 .statusCode(200)
@@ -81,7 +105,7 @@ public class AddPetTests {
                 () -> assertThat("Pet.tags", reqBody.getTags(), is(notNullValue())),
                 () -> assertThat("Pet.tags", reqBody.getTags(), is(respBody.getTags())),
                 () -> assertThat("Pet.status", reqBody.getStatus(), is(respBody.getStatus()))
-                );
+        );
     }
 
 }
