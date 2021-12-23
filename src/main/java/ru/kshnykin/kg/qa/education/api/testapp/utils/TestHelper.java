@@ -10,6 +10,10 @@ import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.LINE_SEP;
 
 public class TestHelper {
 
+    public static void createTestsByCheckList(Object aClass) {
+        createTestsByCheckList(aClass.getClass());
+    }
+
     public static void createTestsByCheckList(Class<?> testClass) {
         List<String> checkList = IOHelper.getResourceAsStringList("check-list.csv");
         File javaFile = IOHelper.getJavaClassAsFile(testClass);

@@ -6,18 +6,40 @@ import io.restassured.specification.RequestSpecification;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ClientBase;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
 
-public class PetControllerClient {
+public class PetController {
 
-    public static final String DEF_PATH = "/pet";
+    public static final String CONTROLLER_PATH = "/pet";
 
     public static AddPet getAddPetEndpoint() {
         return new AddPet();
     }
+
+    public static UploadImage getUploadImageEndpoint() {
+        return new UploadImage();
+    }
+
     /**
      * Uploads an image
-     * host/v2/pet/uploadImage
+     * host/v2/pet/{petId}/uploadImage
      */
     public static class UploadImage extends ClientBase {
+
+        public static final String DEF_PATH = CONTROLLER_PATH + "/{petId}/uploadImage";
+
+        private UploadImage() {
+        }
+
+        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification spec) {
+            return (ValidatableResponseImpl) given()
+                    .log().all()
+                    .accept(ContentType.APP_JSON)
+                    .contentType(ContentType.MULTI_FORM_DATA)
+                    .spec(spec)
+                    .when()
+                    .post(DEF_PATH)
+                    .then()
+                    .log().all();
+        }
 
     }
 
@@ -27,12 +49,17 @@ public class PetControllerClient {
      */
     public static class AddPet extends ClientBase {
 
-        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification specification) {
+        public static final String DEF_PATH = CONTROLLER_PATH;
+
+        private AddPet() {
+        }
+
+        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification spec) {
             return (ValidatableResponseImpl) RestAssured.given()
                     .log().all()
                     .contentType(ContentType.APP_JSON)
                     .accept(ContentType.APP_JSON)
-                    .spec(specification)
+                    .spec(spec)
                     .when()
                     .post(DEF_PATH)
                     .then()

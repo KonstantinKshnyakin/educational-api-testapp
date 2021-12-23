@@ -3,3 +3,4 @@
 *.iml
 *.txt
 !todo-list.txt
+!src/main/resources/tests/txt.txt

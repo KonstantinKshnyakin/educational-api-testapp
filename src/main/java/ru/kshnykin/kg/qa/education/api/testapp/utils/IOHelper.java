@@ -3,12 +3,15 @@ package ru.kshnykin.kg.qa.education.api.testapp.utils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.SystemUtils.USER_DIR;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.Utils.execute;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.Utils.supply;
 
@@ -30,6 +33,11 @@ public class IOHelper {
         });
     }
 
+    public static File getResourceAsFile(String filePath) {
+        URL resource = getResource(filePath);
+        return new File(resource.getPath());
+    }
+
     public static List<String> getResourceAsStringList(final String filePath) {
         InputStream resourceAsStream = getResourceAsStream(filePath);
         return new BufferedReader(new InputStreamReader(resourceAsStream, UTF_8))
@@ -42,17 +50,21 @@ public class IOHelper {
         return getClassLoader().getResourceAsStream(filePath);
     }
 
+    public static URL getResource(String filePath) {
+        Objects.requireNonNull(filePath, "Resource file name can not be null");
+        return getClassLoader().getResource(filePath);
+    }
+
     public static ClassLoader getClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
     public static File getJavaFileBasePackage(Class<?> testClass) {
         final File testClassDir = new File(testClass.getProtectionDomain().getCodeSource().getLocation().getPath());
-        String userDir = System.getProperty("user.dir");
         if ("test-classes".equals(testClassDir.getName())) {
-            return new File(userDir + "/src/test/java/");
+            return new File(USER_DIR + "/src/test/java/");
         } else {
-            return new File(userDir + "/src/main/java/");
+            return new File(USER_DIR + "/src/main/java/");
         }
     }
 
@@ -64,7 +76,24 @@ public class IOHelper {
     }
 
     public static void write(String text, File file) {
+        Objects.requireNonNull(file, "File can not be null");
         execute(() -> IOUtils.write(text, new FileOutputStream(file), UTF_8));
+    }
+
+    public static long getFileSize(File file) {
+        Objects.requireNonNull(file, "File can not be null");
+        return Utils.supply(() -> Files.size(file.toPath()));
+    }
+
+    public static String getFileExtension(File file) {
+        Objects.requireNonNull(file, "File can not be null");
+        String fileName = file.getName();
+        return fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".") + 1) : "";
+    }
+
+    public static String getFileContentType(File file) {
+        Objects.requireNonNull(file, "File can not be null");
+        return Utils.supply(() -> Files.probeContentType(file.toPath()));
     }
 
 }

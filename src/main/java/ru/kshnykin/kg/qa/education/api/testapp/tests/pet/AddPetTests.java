@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.TestSkippedException;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
-import ru.kshnykin.kg.qa.education.api.testapp.api.client.PetControllerClient;
+import ru.kshnykin.kg.qa.education.api.testapp.api.client.PetController;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,7 +19,7 @@ import static ru.kshnykin.kg.qa.education.api.testapp.generators.PetReqGenerator
 @SuppressWarnings("UnusedReturnValue")
 public class AddPetTests {
 
-    public static final PetControllerClient.AddPet ENDPOINT = PetControllerClient.getAddPetEndpoint();
+    public static final PetController.AddPet ENDPOINT = PetController.getAddPetEndpoint();
 
     @Test
     public void test0() {
