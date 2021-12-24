@@ -1,7 +1,7 @@
 package ru.kshnykin.kg.qa.education.api.testapp.tests.pet;
 
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.internal.ValidatableResponseImpl;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.TestSkippedException;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
-import ru.kshnykin.kg.qa.education.api.testapp.api.client.PetController;
+import ru.kshnykin.kg.qa.education.api.testapp.api.controller.PetController;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,7 +24,7 @@ public class AddPetTests {
     @Test
     public void test0() {
         Pet reqBody = genPet();
-        ValidatableResponseImpl response = ENDPOINT.getDefaultRequestWith(genPet());
+        ValidatableResponse response = ENDPOINT.getDefaultRequestWith(genPet());
         asserSuccessResponse(response, reqBody);
     }
 
@@ -39,28 +39,28 @@ public class AddPetTests {
 //                .setContentType(ContentType.ANY)
                 .build();
 
-        ValidatableResponseImpl response = ENDPOINT.getDefaultRequestWith(reqSpec);
+        ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
         asserSuccessResponse(response, reqBody);
     }
 
     @Test
     public void test2() {
         Pet reqBody = genPet();
-        ValidatableResponseImpl response = ENDPOINT.getDefaultRequestWith(reqBody);
+        ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqBody);
         asserSuccessResponse(response, reqBody);
     }
 
     @Test
     public void test3() {
         Pet reqBody = genPet();
-        ValidatableResponseImpl response = ENDPOINT.getDefaultRequestWith(reqBody);
+        ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqBody);
         asserSuccessResponse(response, reqBody);
     }
 
     @Test
     public void test4() {
         Pet reqBody = genPet();
-        ValidatableResponseImpl response = ENDPOINT.getDefaultRequestWith(reqBody);
+        ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqBody);
         asserSuccessResponse(response, reqBody);
     }
 
@@ -85,11 +85,13 @@ public class AddPetTests {
         throw new TestSkippedException("Unimplemented test");
     }
 
-    private ValidatableResponseImpl asserSuccessResponse(ValidatableResponseImpl response, Pet reqBody) {
-        response.assertThat()
+    private ValidatableResponse asserSuccessResponse(ValidatableResponse response, Pet reqBody) {
+        Pet respBody = response.assertThat()
                 .statusCode(200)
-                .contentType(ContentType.APP_JSON);
-        Pet respBody = response.originalResponse().as(Pet.class);
+                .contentType(ContentType.APP_JSON)
+                .extract()
+                .as(Pet.class);
+
         asserResponseBody(reqBody, respBody);
         return response;
     }

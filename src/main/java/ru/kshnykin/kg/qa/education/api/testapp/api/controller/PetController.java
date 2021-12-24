@@ -1,10 +1,14 @@
-package ru.kshnykin.kg.qa.education.api.testapp.api.client;
+package ru.kshnykin.kg.qa.education.api.testapp.api.controller;
 
 import io.restassured.RestAssured;
-import io.restassured.internal.ValidatableResponseImpl;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ClientBase;
 import ru.kshnykin.kg.qa.education.api.testapp.api.ContentType;
+import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class PetController {
 
@@ -18,6 +22,10 @@ public class PetController {
         return new UploadImage();
     }
 
+    public static FindPetsByStatus getFindPetsByStatusEndpoint() {
+        return new FindPetsByStatus();
+    }
+
     /**
      * Uploads an image
      * host/v2/pet/{petId}/uploadImage
@@ -29,8 +37,8 @@ public class PetController {
         private UploadImage() {
         }
 
-        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification spec) {
-            return (ValidatableResponseImpl) given()
+        public ValidatableResponse getDefaultRequestWith(RequestSpecification spec) {
+            return given()
                     .log().all()
                     .accept(ContentType.APP_JSON)
                     .contentType(ContentType.MULTI_FORM_DATA)
@@ -54,8 +62,8 @@ public class PetController {
         private AddPet() {
         }
 
-        public ValidatableResponseImpl getDefaultRequestWith(RequestSpecification spec) {
-            return (ValidatableResponseImpl) RestAssured.given()
+        public ValidatableResponse getDefaultRequestWith(RequestSpecification spec) {
+            return RestAssured.given()
                     .log().all()
                     .contentType(ContentType.APP_JSON)
                     .accept(ContentType.APP_JSON)
@@ -66,8 +74,8 @@ public class PetController {
                     .log().all();
         }
 
-        public ValidatableResponseImpl getDefaultRequestWith(Object requestBody) {
-            return (ValidatableResponseImpl) RestAssured.given()
+        public ValidatableResponse getDefaultRequestWith(Object requestBody) {
+            return RestAssured.given()
                     .log().all()
                     .contentType(ContentType.APP_JSON)
                     .accept(ContentType.APP_JSON)
@@ -93,6 +101,31 @@ public class PetController {
      * host/v2/pet/findByStatus
      */
     public static class FindPetsByStatus extends ClientBase {
+
+        public static final String DEF_PATH = CONTROLLER_PATH + "/findByStatus";
+
+        private FindPetsByStatus() {
+        }
+
+        public ValidatableResponse getDefaultRequestWith(Object status) {
+            return RestAssured.given()
+                    .log().all()
+                    .accept(ContentType.APP_JSON)
+                    .queryParam("status", status)
+                    .when()
+                    .get(DEF_PATH)
+                    .then()
+                    .log().all();
+        }
+
+        public List<Pet> getDefaultRequestStep(Object status) {
+            Pet[] pets = getDefaultRequestWith(status)
+                    .statusCode(200)
+                    .contentType(ContentType.APP_JSON)
+                    .extract()
+                    .as(Pet[].class);
+            return Arrays.asList(pets);
+        }
 
     }
 
