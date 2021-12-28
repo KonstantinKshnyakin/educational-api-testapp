@@ -5,21 +5,28 @@ import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Category;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Tag;
 
-import java.util.List;
+import java.util.Arrays;
+
+import static ru.kshnykin.kg.qa.education.api.testapp.utils.RandomGenerator.genAlphabeticStr;
+import static ru.kshnykin.kg.qa.education.api.testapp.utils.RandomGenerator.genPositiveInt;
 
 @UtilityClass
 public class PetReqGenerator {
 
     public static Pet genPet() {
         return new Pet()
-                .setId(0L)
                 .setCategory(
-                        new Category().setId(0L).setName("string")
+                        new Category(genPositiveInt(), genAlphabeticStr(5))
                 )
-                .setName("doggie")
-                .setPhotoUrls(List.of("string"))
+                .setName(genAlphabeticStr(5))
+                .setPhotoUrls(
+                        Arrays.asList(genAlphabeticStr(5), genAlphabeticStr(5), genAlphabeticStr(5))
+                )
                 .setTags(
-                        List.of(new Tag().setId(0L).setName("string"))
+                        Arrays.asList(
+                                new Tag(genPositiveInt(), genAlphabeticStr(5)),
+                                new Tag(genPositiveInt(), genAlphabeticStr(5)),
+                                new Tag(genPositiveInt(), genAlphabeticStr(5)))
                 )
                 .setStatus(Pet.PetStatus.AVAILABLE);
     }

@@ -14,7 +14,8 @@ import ru.kshnykin.kg.qa.education.api.testapp.api.dto.ApiResponse;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
 import ru.kshnykin.kg.qa.education.api.testapp.exception.ResourceNotFoundException;
 import ru.kshnykin.kg.qa.education.api.testapp.generators.MultiPartSpecGenerator;
-import ru.kshnykin.kg.qa.education.api.testapp.utils.DataGenerator;
+import ru.kshnykin.kg.qa.education.api.testapp.tests.BaseTest;
+import ru.kshnykin.kg.qa.education.api.testapp.utils.RandomGenerator;
 
 import java.io.File;
 import java.util.Optional;
@@ -25,7 +26,7 @@ import static ru.kshnykin.kg.qa.education.api.testapp.api.dto.ApiResponse.*;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.*;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.PathToFile.*;
 
-public class UploadImageTests {
+public class UploadImageTests extends BaseTest {
 
     public static final PetController.UploadImage ENDPOINT = PetController.getUploadImageEndpoint();
 
@@ -37,7 +38,7 @@ public class UploadImageTests {
                 .build();
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, BAD_REQUEST.withMessage(MISS_START_BOUND_MES));
+        assertFailResponse(response, BAD_REQUEST.withMessage(MISS_START_BOUND_MES));
     }
 
     @Test
@@ -50,7 +51,7 @@ public class UploadImageTests {
                 .build();
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, BAD_REQUEST.withMessage(MISS_START_BOUND_MES));
+        assertFailResponse(response, BAD_REQUEST.withMessage(MISS_START_BOUND_MES));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class UploadImageTests {
                 .build();
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, null);
+        assertSuccessResponse(response, file, null);
     }
 
     @Test
@@ -75,7 +76,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -86,7 +87,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -97,7 +98,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -108,7 +109,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -119,7 +120,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -136,7 +137,7 @@ public class UploadImageTests {
                 .build();
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -147,7 +148,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, 0L, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -155,11 +156,11 @@ public class UploadImageTests {
     public void test1640164769190() {
         File file = getResourceAsFile(GIF);
         String addMetadata = getFileExtension(file);
-        Double petId = DataGenerator.genPositiveDouble();
+        Double petId = RandomGenerator.genPositiveDouble();
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
+        assertFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
     }
 
     @Test
@@ -167,11 +168,11 @@ public class UploadImageTests {
     public void test1640164769191() {
         File file = getResourceAsFile(GIF);
         String addMetadata = getFileExtension(file);
-        Integer petId = DataGenerator.genNegativeInt();
+        Integer petId = RandomGenerator.genNegativeInt();
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -183,7 +184,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
+        assertFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
     }
 
     @Test
@@ -195,7 +196,7 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
+        assertFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
     }
 
     @Test
@@ -207,29 +208,29 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
+        assertFailResponse(response, NOT_FOUND.withMessage(NUM_FORMAT_EXC_MES, petId));
     }
 
     @Test
     @DisplayName("все поля заполнены и поле additionalMetadata = рандомное вещественно число -> OK")
     public void test1640355826866() {
         File file = getResourceAsFile(GIF);
-        Double addMetadata = DataGenerator.genPositiveDouble();
+        Double addMetadata = RandomGenerator.genPositiveDouble();
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
     @DisplayName("все поля заполнены и поле additionalMetadata = рандомное отрицптельное число -> OK")
     public void test1640355826867() {
         File file = getResourceAsFile(GIF);
-        Integer addMetadata = DataGenerator.genNegativeInt();
+        Integer addMetadata = RandomGenerator.genNegativeInt();
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
@@ -240,31 +241,29 @@ public class UploadImageTests {
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
     @DisplayName("все поля заполнены и поле additionalMetadata = '&' -> OK")
-    @Disabled
     public void test1640355826869() {
         File file = getResourceAsFile(GIF);
         String addMetadata = "&";
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     @Test
     @DisplayName("все поля заполнены и поле additionalMetadata = 'five' -> OK")
-    @Disabled
     public void test1640355826870() {
         File file = getResourceAsFile(GIF);
         String addMetadata = "five";
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
         ValidatableResponse response = ENDPOINT.getDefaultRequestWith(reqSpec);
-        asserSuccessResponse(response, file, addMetadata);
+        assertSuccessResponse(response, file, addMetadata);
     }
 
     private RequestSpecification genRequestSpec(File file, Object addMetadata) {
@@ -280,17 +279,17 @@ public class UploadImageTests {
                 .build();
     }
 
-    private void asserFailResponse(ValidatableResponse response, ApiResponse expected) {
+    private void assertFailResponse(ValidatableResponse response, ApiResponse expected) {
         ApiResponse respBody = response.assertThat()
                 .statusCode(expected.getCode())
                 .contentType(ContentType.APP_JSON)
                 .extract()
                 .as(ApiResponse.class);
 
-        asserResponseBody(respBody, expected);
+        assertResponseBody(respBody, expected);
     }
 
-    private void asserSuccessResponse(ValidatableResponse response, File file, Object addMetadata) {
+    private void assertSuccessResponse(ValidatableResponse response, File file, Object addMetadata) {
         ApiResponse respBody = response.assertThat()
                 .statusCode(SUCCESS.getCode())
                 .contentType(ContentType.APP_JSON)
@@ -298,10 +297,10 @@ public class UploadImageTests {
                 .as(ApiResponse.class);
 
         String message = String.format(SUCCESS_MES, addMetadata, file.getName(), getFileSize(file));
-        asserResponseBody(respBody, SUCCESS.withMessage(message));
+        assertResponseBody(respBody, SUCCESS.withMessage(message));
     }
 
-    private void asserResponseBody(ApiResponse actual, ApiResponse expected) {
+    private void assertResponseBody(ApiResponse actual, ApiResponse expected) {
         Assertions.assertAll(
                 () -> assertThat("ApiResponse.code", actual.getCode(), is(expected.getCode())),
                 () -> assertThat("ApiResponse.type", actual.getType(), is(expected.getType())),
@@ -309,12 +308,12 @@ public class UploadImageTests {
         );
     }
 
-    private Long getPetId() {
+    private Integer getPetId() {
         Optional<Pet> pet = PetController.getFindPetsByStatusEndpoint()
                 .getDefaultRequestStep(Pet.PetStatus.PENDING)
                 .stream().findFirst();
         if (pet.isPresent()) {
-            return pet.get().getId();
+            return (Integer) pet.get().getId();
         }
         throw new ResourceNotFoundException("Не найден обект Pet");
     }

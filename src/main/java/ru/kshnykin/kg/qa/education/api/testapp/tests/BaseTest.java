@@ -1,20 +1,43 @@
-package ru.kshnykin.kg.qa.education.api.testapp.utils;
+package ru.kshnykin.kg.qa.education.api.testapp.tests;
+
+import ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.LINE_SEP;
 
-public class TestHelper {
+public abstract class BaseTest {
 
-    public static void createTestsByCheckList(Object aClass) {
+    public String toStr(Object o) {
+        return String.valueOf(o);
+    }
+
+    public Object replaceAfterDotIfDouble(Object number) {
+        if (number instanceof Double) {
+            String num = number.toString();
+            return Integer.valueOf(num.substring(0, num.lastIndexOf(".")));
+        }
+        return number;
+    }
+
+    public <T> List<T> genList(Supplier<T> supplier, int count) {
+        return IntStream
+                .rangeClosed(1, count)
+                .mapToObj(i -> supplier.get())
+                .collect(Collectors.toList());
+    }
+
+    public void createTestsByCheckList(Object aClass) {
         createTestsByCheckList(aClass.getClass());
     }
 
-    public static void createTestsByCheckList(Class<?> testClass) {
+    public void createTestsByCheckList(Class<?> testClass) {
         List<String> checkList = IOHelper.getResourceAsStringList("check-list.csv");
         File javaFile = IOHelper.getJavaClassAsFile(testClass);
         String javaFileBody = IOHelper.readFileAsString(javaFile);
@@ -28,7 +51,7 @@ public class TestHelper {
         }
     }
 
-    private static String getFinalFile(String javaFileBody, List<String> testCasesForAdd) {
+    private String getFinalFile(String javaFileBody, List<String> testCasesForAdd) {
         long time = new Date().getTime();
         StringJoiner result = new StringJoiner(LINE_SEP);
         for (String bodyString : javaFileBody.split(LINE_SEP)) {
@@ -50,7 +73,7 @@ public class TestHelper {
         return result.toString();
     }
 
-    private static List<String> getTestCasesForAdd(List<String> checkList, String javaFileBody) {
+    private List<String> getTestCasesForAdd(List<String> checkList, String javaFileBody) {
         return checkList.stream()
                 .filter(testCase -> !javaFileBody.contains(testCase))
                 .collect(Collectors.toList());

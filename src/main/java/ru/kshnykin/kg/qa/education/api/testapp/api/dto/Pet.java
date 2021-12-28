@@ -1,21 +1,24 @@
 package ru.kshnykin.kg.qa.education.api.testapp.api.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pet {
 
-    private Long id;
+    private Object id;
     private Category category;
-    private String name;
-    private List<String> photoUrls;
+    private Object name;
+    private List<Object> photoUrls;
     private List<Tag> tags;
-    private String status;
+    private Object status;
 
     @Data
     public static class PetStatus {
