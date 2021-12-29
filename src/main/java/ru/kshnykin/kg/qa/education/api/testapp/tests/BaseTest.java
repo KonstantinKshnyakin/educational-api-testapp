@@ -58,11 +58,9 @@ public abstract class BaseTest {
             if (bodyString.equals("}")) {
                 for (String testCase : testCasesForAdd) {
                     time++;
-                    result.add("    @Test");
-                    result.add("    @DisplayName(\"" + testCase + "\")");
-                    result.add("    @Disabled");
+                    result.add("    @Test(title = \"" + testCase + "\")");
                     result.add("    public void test" + time + "() {");
-                    result.add("        throw new TestSkippedException(\"Unimplemented test\");");
+                    result.add("        throw new UnimplementedTest();");
                     result.add("    }" + LINE_SEP);
                 }
                 result.add("}");
