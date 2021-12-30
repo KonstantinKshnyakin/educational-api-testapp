@@ -1,5 +1,8 @@
 package ru.kshnykin.kg.qa.education.api.testapp.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -24,6 +27,12 @@ public class IOHelper {
     public static String readFileAsString(File file) {
         List<String> stringList = readFileAsStringList(file);
         return String.join(LINE_SEP, stringList);
+    }
+
+    public static <T> T readYmlFileAsObject(String filePath, Class<T> tClass) {
+        File file = getResourceAsFile(filePath);
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+        return Utils.supply(() -> objectMapper.readValue(file, tClass));
     }
 
     public static List<String> readFileAsStringList(File file) {
@@ -88,7 +97,7 @@ public class IOHelper {
     public static String getFileExtension(File file) {
         Objects.requireNonNull(file, "File can not be null");
         String fileName = file.getName();
-        return fileName.contains(".") ? fileName.substring(fileName.lastIndexOf(".") + 1) : "";
+        return FilenameUtils.getExtension(fileName);
     }
 
     public static String getFileContentType(File file) {

@@ -289,12 +289,12 @@ public class UploadImageTests extends BaseTest {
         );
     }
 
-    private Integer getPetId() {
+    private Long getPetId() {
         Optional<Pet> pet = PetController.getInstance()
                 .findByStatusStep(Pet.PetStatus.PENDING)
                 .stream().findFirst();
         if (pet.isPresent()) {
-            return (Integer) pet.get().getId();
+            return (Long) pet.get().getId();
         }
         throw new ResourceNotFoundException("Не найден обект Pet");
     }

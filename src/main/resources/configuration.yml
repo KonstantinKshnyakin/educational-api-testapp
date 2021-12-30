@@ -1,0 +1,26 @@
+envId: "p"
+envs:
+  DEV:
+    host: "host-d"
+    basePath: "/v2"
+    port: 8080
+    users:
+      username1-d: "password-d"
+      username2-d: "password-d"
+      username3-d: "password-d"
+  TEST:
+    host: "host-t"
+    basePath: "/v2"
+    port: 443
+    users:
+      username1-t: "password-t"
+      username2-t: "password-t"
+      username3-t: "password-t"
+  PROD:
+    host: "https://petstore.swagger.io"
+    basePath: "/v2"
+    port: 443
+    users:
+      username1-p: "password-p"
+      username2-p: "password-p"
+      username3-p: "password-p"
