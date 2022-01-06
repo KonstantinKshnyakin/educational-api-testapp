@@ -6,7 +6,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,49 +18,55 @@ import static ru.kshnykin.kg.qa.education.api.testapp.utils.Utils.execute;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.Utils.supply;
 
 
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public class IOHelper {
 
     public static final Charset UTF_8 = StandardCharsets.UTF_8;
     public static final String LINE_SEP = System.lineSeparator();
 
-    public static String readFileAsString(File file) {
-        List<String> stringList = readFileAsStringList(file);
+    public static <T> T getYmlFileAsObject(String filePath, Class<T> tClass) {
+        String resource = getResourceAsString(filePath);
+        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
+        return Utils.supply(() -> objectMapper.readValue(resource, tClass));
+    }
+
+    public static String getFileAsString(File file) {
+        List<String> stringList = getFileAsStringList(file);
         return String.join(LINE_SEP, stringList);
     }
 
-    public static <T> T readYmlFileAsObject(String filePath, Class<T> tClass) {
-        File file = getResourceAsFile(filePath);
-        ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-        return Utils.supply(() -> objectMapper.readValue(file, tClass));
+    public static List<String> getFileAsStringList(File file) {
+        return supply(() -> IOUtils.readLines(new InputStreamReader(new FileInputStream(file))));
     }
 
-    public static List<String> readFileAsStringList(File file) {
-        return supply(() -> {
-            FileInputStream fis = new FileInputStream(file);
-            return IOUtils.readLines(fis, UTF_8);
-        });
+    public static File getResourceAsTempFile(TestFiles testFiles) {
+        String resourceAsString = getResourceAsString(testFiles.getPath());
+        File tempFile = createTempFile(testFiles.getExtension());
+        write(resourceAsString, tempFile);
+        return tempFile;
     }
 
-    public static File getResourceAsFile(String filePath) {
-        URL resource = getResource(filePath);
-        return new File(resource.getPath());
-    }
-
-    public static List<String> getResourceAsStringList(final String filePath) {
-        InputStream resourceAsStream = getResourceAsStream(filePath);
-        return new BufferedReader(new InputStreamReader(resourceAsStream, UTF_8))
+    public static List<String> getResourceAsStringList(String filePath) {
+        return getResourceAsBufferReader(filePath)
                 .lines()
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public static InputStream getResourceAsStream(final String filePath) {
+    public static String getResourceAsString(String filePath) {
+        return getResourceAsBufferReader(filePath)
+                .lines()
+                .collect(Collectors.joining(LINE_SEP));
+    }
+
+    public static BufferedReader getResourceAsBufferReader(String filePath) {
+        Objects.requireNonNull(filePath, "Resource file name can not be null");
+        InputStream resourceAsStream = getResourceAsStream(filePath);
+        return new BufferedReader(new InputStreamReader(resourceAsStream, UTF_8));
+    }
+
+    public static InputStream getResourceAsStream(String filePath) {
         Objects.requireNonNull(filePath, "Resource file name can not be null");
         return getClassLoader().getResourceAsStream(filePath);
-    }
-
-    public static URL getResource(String filePath) {
-        Objects.requireNonNull(filePath, "Resource file name can not be null");
-        return getClassLoader().getResource(filePath);
     }
 
     public static ClassLoader getClassLoader() {
@@ -103,6 +108,21 @@ public class IOHelper {
     public static String getFileContentType(File file) {
         Objects.requireNonNull(file, "File can not be null");
         return Utils.supply(() -> Files.probeContentType(file.toPath()));
+    }
+
+    public static File createTempFile(String extension) {
+        return createTempFile("autotest", extension);
+    }
+
+    public static File createTempFile() {
+        return createTempFile("autotest", ".tmp");
+    }
+
+    public static File createTempFile(String prefix, String extension) {
+        String suffix = extension.startsWith(".") ? extension : "." + extension;
+        File tempFile = Utils.supply(() -> File.createTempFile(prefix, suffix));
+        tempFile.deleteOnExit();
+        return tempFile;
     }
 
 }

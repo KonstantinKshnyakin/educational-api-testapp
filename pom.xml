@@ -9,11 +9,14 @@
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
+        <shaded.main.class>ru.kshnykin.kg.qa.education.api.testapp.Launcher</shaded.main.class>
+        <shaded.final.name>Launcher</shaded.final.name>
         <source.encoding>UTF-8</source.encoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <ver.junit.jupiter>5.8.2</ver.junit.jupiter>
         <ver.jackson>2.13.1</ver.jackson>
+        <ver.junit.platform>1.8.2</ver.junit.platform>
     </properties>
 
     <dependencies>
@@ -33,13 +36,23 @@
             <artifactId>junit-jupiter-api</artifactId>
             <version>${ver.junit.jupiter}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${ver.junit.jupiter}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-console</artifactId>
+            <version>${ver.junit.platform}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
             <version>2.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -49,6 +62,11 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>${ver.jackson}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.81</version>
         </dependency>
         <!--        util-->
         <dependency>
@@ -61,26 +79,56 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>com.github.dzieciou.testing</groupId>
-            <artifactId>curl-logger</artifactId>
-            <version>2.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.2.9</version>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <id>Build executable jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${shaded.final.name}</finalName>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>**/module-info.*</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/*.MD</exclude>
+                                        <exclude>META-INF/*.md</exclude>
+                                        <exclude>META-INF/*NOTICE*</exclude>
+                                        <exclude>META-INF/*DEPENDENCIES*</exclude>
+                                        <exclude>META-INF/*LICENSE*</exclude>
+                                        <exclude>META-INF/*MANIFEST*</exclude>
+                                        <exclude>META-INF/*groovy-release-info*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${shaded.main.class}</mainClass>
+                                    <manifestEntries>
+                                        <Version>${project.version}</Version>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

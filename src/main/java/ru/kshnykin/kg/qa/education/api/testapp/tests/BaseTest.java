@@ -40,7 +40,7 @@ public abstract class BaseTest {
     public void createTestsByCheckList(Class<?> testClass) {
         List<String> checkList = IOHelper.getResourceAsStringList("check-list.csv");
         File javaFile = IOHelper.getJavaClassAsFile(testClass);
-        String javaFileBody = IOHelper.readFileAsString(javaFile);
+        String javaFileBody = IOHelper.getFileAsString(javaFile);
         List<String> testCasesForAdd = getTestCasesForAdd(checkList, javaFileBody);
         if (!testCasesForAdd.isEmpty()) {
             String result = getFinalFile(javaFileBody, testCasesForAdd);
@@ -60,7 +60,7 @@ public abstract class BaseTest {
                     time++;
                     result.add("    @Test(title = \"" + testCase + "\")");
                     result.add("    public void test" + time + "() {");
-                    result.add("        throw new UnimplementedTest();");
+                    result.add("        throw new UnimplementedTestException();");
                     result.add("    }" + LINE_SEP);
                 }
                 result.add("}");

@@ -1,6 +1,5 @@
 package ru.kshnykin.kg.qa.education.api.testapp.api;
 
-import com.github.dzieciou.testing.curl.CurlRestAssuredConfigFactory;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import ru.kshnykin.kg.qa.education.api.testapp.config.Configuration;
@@ -17,8 +16,7 @@ public abstract class ClientBase extends RestAssured {
         EnvironmentConfig envConfig = Configuration.getEnvironmentConfig();
         RestAssured.baseURI = envConfig.getHost();
         RestAssured.basePath = envConfig.getBasePath();
-        RestAssured.config = CurlRestAssuredConfigFactory.createConfig()
-//        RestAssured.config = config()
+        RestAssured.config = config()
                 .encoderConfig(
                         encoderConfig()
                                 .encodeContentTypeAs(MULTI_FORM_DATA, ContentType.TEXT)

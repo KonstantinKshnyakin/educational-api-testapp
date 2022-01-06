@@ -8,19 +8,25 @@ import ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Configuration {
 
     private static String envId;
+    private static Environments env;
     private static final Map<Environments, EnvironmentConfig> envs = new HashMap<>();
     @JsonIgnore
     private static final Map<String, Object> additionalProperties = new HashMap<>();
+
+    private static final AtomicBoolean IS_CONFIGURED = new AtomicBoolean(false);
 
     private Configuration() {
     }
 
     public static void init() {
-        IOHelper.readYmlFileAsObject("configuration.yml", Configuration.class);
+        if (!IS_CONFIGURED.getAndSet(true)) {
+            IOHelper.getYmlFileAsObject("configuration.yml", Configuration.class);
+        }
     }
 
     public static String getEnvId() {
@@ -28,15 +34,22 @@ public class Configuration {
     }
 
     public static void setEnvId(String envId) {
+        Configuration.env = Environments.parse(envId);
         Configuration.envId = envId;
     }
 
-    public static Environments getEnvironment(String envId) {
-        return Environments.parse(envId);
+    public static Environments getEnvironment() {
+        return env;
     }
 
-    public static Environments getEnvironment() {
-        return Environments.parse(getEnvId());
+    public static void setEnvironment(String envId) {
+        Configuration.env = Environments.parse(envId);
+        Configuration.envId = envId;
+    }
+
+    public static void setEnvironment(Environments env) {
+        Configuration.env = env;
+        Configuration.envId = env.name();
     }
 
     public static EnvironmentConfig getEnvironmentConfig(String envId) {
@@ -44,7 +57,7 @@ public class Configuration {
     }
 
     public static EnvironmentConfig getEnvironmentConfig() {
-        return envs.get(Environments.parse(getEnvId()));
+        return envs.get(getEnvironment());
     }
 
     public static Map<String, Object> getAdditionalProperties() {
@@ -63,6 +76,7 @@ public class Configuration {
     @JsonProperty("envId")
     private void _setEnvId(String envId) {
         Configuration.envId = envId;
+        Configuration.env = Environments.parse(envId);
     }
 
     @JsonProperty("envs")

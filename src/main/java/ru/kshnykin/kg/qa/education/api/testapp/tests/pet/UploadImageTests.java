@@ -14,7 +14,9 @@ import ru.kshnykin.kg.qa.education.api.testapp.exception.ResourceNotFoundExcepti
 import ru.kshnykin.kg.qa.education.api.testapp.generators.MultiPartSpecGenerator;
 import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.Test;
 import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.TestClass;
+import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.tags.PetUploadImageTag;
 import ru.kshnykin.kg.qa.education.api.testapp.tests.BaseTest;
+import ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper;
 import ru.kshnykin.kg.qa.education.api.testapp.utils.RandomGenerator;
 
 import java.io.File;
@@ -23,9 +25,11 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static ru.kshnykin.kg.qa.education.api.testapp.api.dto.ApiResponse.*;
-import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.*;
-import static ru.kshnykin.kg.qa.education.api.testapp.utils.PathToFile.*;
+import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.getFileExtension;
+import static ru.kshnykin.kg.qa.education.api.testapp.utils.IOHelper.getFileSize;
+import static ru.kshnykin.kg.qa.education.api.testapp.utils.TestFiles.*;
 
+@PetUploadImageTag
 @TestClass(title = "Uploads an image - host/v2/pet/{petId}/uploadImage")
 public class UploadImageTests extends BaseTest {
 
@@ -55,7 +59,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id и file -> OK")
     public void test1640164769182() {
-        File file = getResourceAsFile(JPG);
+        File file = IOHelper.getResourceAsTempFile(JPG);
         MultiPartSpecification multiPartSpec = MultiPartSpecGenerator.gen(file);
         RequestSpecification reqSpec = new RequestSpecBuilder()
                 .addPathParam("petId", getPetId())
@@ -68,7 +72,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id, file = jpg file и additionalMetadata = 'jpg'-> OK")
     public void test1640164769183() {
-        File file = getResourceAsFile(JPG);
+        File file = IOHelper.getResourceAsTempFile(JPG);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -78,7 +82,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id, file = png file и additionalMetadata = 'png'-> OK")
     public void test1640164769184() {
-        File file = getResourceAsFile(PNG);
+        File file = IOHelper.getResourceAsTempFile(PNG);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -88,7 +92,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id, file = gif file и additionalMetadata = 'gif'-> OK")
     public void test1640164769185() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         RequestSpecificationImpl reqSpec = genRequestSpec(file, addMetadata);
 
@@ -98,7 +102,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id, file = pdf file и additionalMetadata = 'pdf'-> ERROR")
     public void test1640164769186() {
-        File file = getResourceAsFile(PDF);
+        File file = IOHelper.getResourceAsTempFile(PDF);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -108,7 +112,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "если переданы petId = существующий id, file = txt file и additionalMetadata = 'txt'-> ERROR")
     public void test1640164769187() {
-        File file = getResourceAsFile(TXT);
+        File file = IOHelper.getResourceAsTempFile(TXT);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -118,7 +122,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и передан дполонительный formParam -> OK")
     public void test1640164769188() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         MultiPartSpecification multiPartSpec = MultiPartSpecGenerator.gen(file);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = new RequestSpecBuilder()
@@ -134,7 +138,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = 0 -> ERROR")
     public void test1640164769189() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         RequestSpecification reqSpec = genRequestSpec(file, 0L, addMetadata);
 
@@ -144,7 +148,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = рандомное вещественно число -> ERROR")
     public void test1640164769190() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         Double petId = RandomGenerator.genPositiveDouble();
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
@@ -155,7 +159,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = рандомное отрицптельное число -> ERROR")
     public void test1640164769191() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         Integer petId = RandomGenerator.genNegativeInt();
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
@@ -166,7 +170,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = true -> ERROR")
     public void test1640164769192() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         boolean petId = true;
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
@@ -177,7 +181,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = '%' -> ERROR")
     public void test1640164769193() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         String petId = "%";
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
@@ -188,7 +192,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и если поле id = 'пять' -> ERROR")
     public void test1640164769194() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = getFileExtension(file);
         String petId = "пять";
         RequestSpecification reqSpec = genRequestSpec(file, petId, addMetadata);
@@ -199,7 +203,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и поле additionalMetadata = рандомное вещественно число -> OK")
     public void test1640355826866() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         Double addMetadata = RandomGenerator.genPositiveDouble();
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -209,7 +213,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и поле additionalMetadata = рандомное отрицптельное число -> OK")
     public void test1640355826867() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         Integer addMetadata = RandomGenerator.genNegativeInt();
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -219,7 +223,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и поле additionalMetadata = true -> OK")
     public void test1640355826868() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         boolean addMetadata = true;
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -229,7 +233,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и поле additionalMetadata = '&' -> OK")
     public void test1640355826869() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = "&";
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -239,7 +243,7 @@ public class UploadImageTests extends BaseTest {
 
     @Test(title = "все поля заполнены и поле additionalMetadata = 'five' -> OK")
     public void test1640355826870() {
-        File file = getResourceAsFile(GIF);
+        File file = IOHelper.getResourceAsTempFile(GIF);
         String addMetadata = "five";
         RequestSpecification reqSpec = genRequestSpec(file, addMetadata);
 
@@ -291,7 +295,7 @@ public class UploadImageTests extends BaseTest {
 
     private Long getPetId() {
         Optional<Pet> pet = PetController.getInstance()
-                .findByStatusStep(Pet.PetStatus.PENDING)
+                .findByStatusStep(Pet.PetStatus.AVAILABLE)
                 .stream().findFirst();
         if (pet.isPresent()) {
             return (Long) pet.get().getId();

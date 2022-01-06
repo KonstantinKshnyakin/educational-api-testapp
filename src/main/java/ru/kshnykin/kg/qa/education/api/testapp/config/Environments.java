@@ -13,7 +13,7 @@ public enum Environments {
         env = env.trim();
         if (env.equalsIgnoreCase("d")
                 || env.equalsIgnoreCase("development")
-                || env.equalsIgnoreCase("develop")) {
+                || env.equalsIgnoreCase("dev")) {
             return DEV;
         }
         if (env.equalsIgnoreCase("t") || env.equalsIgnoreCase("test")) {

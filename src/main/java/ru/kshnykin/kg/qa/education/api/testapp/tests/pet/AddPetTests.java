@@ -10,6 +10,7 @@ import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Pet;
 import ru.kshnykin.kg.qa.education.api.testapp.api.dto.Tag;
 import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.Test;
 import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.TestClass;
+import ru.kshnykin.kg.qa.education.api.testapp.junit.api.annotations.tags.PetAddTag;
 import ru.kshnykin.kg.qa.education.api.testapp.tests.BaseTest;
 
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import static org.hamcrest.Matchers.*;
 import static ru.kshnykin.kg.qa.education.api.testapp.generators.PetReqGenerator.genPet;
 import static ru.kshnykin.kg.qa.education.api.testapp.utils.RandomGenerator.*;
 
+@PetAddTag
 @TestClass(title = "Add a new pet to the store - host/v2/pet")
 public class AddPetTests extends BaseTest {
 
