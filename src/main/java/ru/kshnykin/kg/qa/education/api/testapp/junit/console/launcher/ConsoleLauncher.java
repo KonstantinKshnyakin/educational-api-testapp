@@ -90,6 +90,7 @@ public class ConsoleLauncher {
             commandLineOptions.setIncludedTagExpressions(Collections.singletonList(tagExpression));
             out.println("Tag expression: " + tagExpression);
         }
+        commandLineOptions.setAnsiColorOutputDisabled(!mainOptions.isEnableAnsiColor());
         Configuration.init();
         Configuration.setEnvironment(mainOptions.getEnvironment());
         int exitCode = execute(commandLineOptions).getExitCode();
@@ -126,7 +127,6 @@ public class ConsoleLauncher {
         final CommandLineOptions clo = new CommandLineOptions();
         clo.setScanClasspath(true);
         clo.setDisplayHelp(mainOptions.isHelp());
-        clo.setAnsiColorOutputDisabled(true);
         clo.setDetails(Details.VERBOSE);
         clo.setTheme(Theme.valueOf(Charset.defaultCharset()));
         clo.setIncludedEngines(Collections.singletonList("junit-jupiter"));

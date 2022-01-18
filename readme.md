@@ -18,6 +18,7 @@
 - Свои аннотации Test и TestClass
 - Инициализация конфигурации перед запуском и в jar файле
 - Executable jar c запуском через Tag и Tag expression
+- Jenkinsfile
 
 ## Хотелось бы реализовать
 
@@ -68,5 +69,14 @@ Usage: Test App [options] [command] [command options]
             Default: false
 
 ```
+
+## Jenkins
+
+- К плагинам устанавливаемых по дефолту, установлены:
+  - AnsiColor
+  - Active Choices Plug-in
+- Передача параметров при запуске jar файла:
+
+![img.png](src/main/resources/readme/img.png)
 
 
